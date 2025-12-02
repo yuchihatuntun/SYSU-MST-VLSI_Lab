@@ -10,636 +10,100 @@
 \usepackage{amsmath} 
 \usepackage{subcaption}
 \usepackage{circuitikz}
+\usepackage{hyperref} 
+\usepackage{fancyhdr}
 
 \geometry{left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
 
+% 设置行距
+\linespread{1.5}
+
+% 设置段落间距
+\setlength{\parskip}{0.5em}
 
 \titleformat{\section}{\Large\bfseries}{\thesection}{1em}{}
 \titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
 
-
 \setlist[enumerate,1]{label=\arabic*、, leftmargin=*}
 \setlist[enumerate,2]{label=\arabic*., leftmargin=*}
 
-\setCJKfamilyfont{kai}{KaiTi} 
+% XeLaTeX下使用系统字体
+\setCJKmainfont{SimSun}[AutoFakeBold=2.5] % 宋体
+\setCJKsansfont{SimHei} % 黑体
+\setCJKmonofont{FangSong} % 仿宋
+\setCJKfamilyfont{kai}{KaiTi} % 楷体
 \newcommand{\kai}{\CJKfamily{kai}}
+
+% 配置hyperref
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue,
+    citecolor=blue
+}
 
 \begin{document}
 
 % 标题
 \begin{center}
-    {\kai\LARGE\textbf{实验二\ \ 逻辑门的速度和延时优化}}
+    {\kai\LARGE\textbf{实验X\ \ 此处填写本次实验名称}}
 \end{center}
-\vspace{1cm}
+
+% 页眉页脚
+\pagestyle{fancy}
+\fancyhf{} 
+\fancyhead[L]{\kai 实验X\ \ 此处填写本次实验名称} % 左侧页眉
+\fancyhead[R]{\href{https://github.com/yuchihatuntun/SYSU-MST-VLSI_Lab}{GitHub} | 学生番号\ 君の名は}                   % 右侧页眉
+\fancyfoot[C]{\thepage}                       % 页脚居中页码
+\renewcommand{\headrulewidth}{0.4pt}          % 页眉线宽度
+\renewcommand{\footrulewidth}{0pt}            % 页脚线宽度
+
+\begin{center}
+    学生番号\ 君の名は
+\end{center}
+
+\vspace{0.5cm}
 
 % 实验要求
 \section*{一、实验要求}
-设置NAND门尺寸，了解最差情况下的输入模式及延时，掌握负载与驱动确定如何得到最小延时。
+
 
 % 实验目的
 \section*{二、实验目的}
 \begin{enumerate}
-    \item 了解NAND门的搭建方法；
-    \item 了解延迟的定义及计算方法；
-    \item 掌握如何得到最小延时。
+    \item 
+    \item 
+    \item 
 \end{enumerate}
 
 % 实验内容
 \section*{三、实验内容}
 \begin{enumerate}
-    \item \textbf{NAND4 晶体管尺寸与最差延时分析}
+    \item \textbf{实验内容1}
+    
 
-    确定一个四输入 NAND 门的晶体管尺寸，使其驱动能力与单位反相器近似相等。单位反相器尺寸为：PMOS $W=330\,\text{nm}$, $L=40\,\text{nm}$；NMOS $W=280\,\text{nm}$, $L=40\,\text{nm}$。由于门延迟取决于输入模式，需找到最差情况下的输入模式并测量最差延时，并说明原因。参考书 P159--P163。
-
-    \item \textbf{AND8 最优延时设计与测量}
-
-    设计一个 8 输入 AND 门，使其在已知负载和驱动条件下延时最小。测量方式为：分别测量输入模式 $(1111\,1111 \rightarrow 1111\,1110)$ 的延迟 $D_1$，以及 $(1111\,1110 \rightarrow 1111\,1111)$ 的延迟 $D_2$，加权平均得到 $D = 0.5 D_1 + 0.5 D_2$。AND8 的驱动为单位反相器，输出负载为单位反相器的 64 倍。实验后需给出电路图、尺寸及电路选型方法。参考书 P164--P169。
+    \item \textbf{实验内容2}
+    
 \end{enumerate}
 
 % 实验步骤
 \section*{四、实验步骤}
 
-\subsection*{1. NAND4 最差情况延时}
-
-\begin{figure}[H]\centering
-    \begin{subfigure}{0.48\columnwidth}
-        \centering
-        \includegraphics[width=\linewidth]{assets/lab01-principle-circuit.png}
-        \caption{实验测试电路图}
-        \label{fig:nand4_circuit_a}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}{0.48\columnwidth}
-        \centering
-        \includegraphics[width=0.8\linewidth]{assets/lab01-NAND4-parameter.png}
-        \caption{NAND4 参数设置}
-        \label{fig:nand4_circuit_b}
-    \end{subfigure}
-    \caption{NAND4 测试电路与参数设置}
-    \label{fig:nand4_circuit}
-\end{figure}
-
-为了使复杂逻辑门的驱动能力与单位反相器匹配，我们需要依据\textbf{等效电阻匹配原则}进行尺寸缩放：
-
-\subsubsection*{PMOS 网络设计(上拉网络)}
-
-\textbf{最坏情况分析:} 在最坏情况下(只有一个PMOS导通),其等效电阻应等于单位反相器中单个PMOS的电阻。
-
-\begin{equation}
-    W_{p,\text{NAND4}} = 1 \times W_{p,\text{unit}}
-\end{equation}
-
-\subsubsection*{NMOS 网络设计(下拉网络)}
-
-\textbf{电阻叠加原理:} 串联会导致总电阻增加。为了使4个串联NMOS的总等效电阻等于单位反相器中1个NMOS的电阻,必须将每个NMOS的导通电阻减小为原来的$1/4$。
-
-\begin{equation}
-    W_{n,\text{NAND4}} = 4 \times W_{n,\text{unit}}
-\end{equation}
-
-\subsubsection*{详细计算过程}
-
-\textbf{A. PMOS}
-
-根据并联结构特性,保持单位宽度不变:
-
-\begin{align}
-    W_{p,\text{NAND4}} &= 1 \times 330\text{nm} \nonumber \\
-    &= \mathbf{330nm}
-\end{align}
-
-\textbf{B. NMOS}
-
-根据串联结构特性,宽度需放大4倍:
-
-\begin{align}
-    W_{n,\text{NAND4}} &= 4 \times 280\text{nm} \nonumber \\
-    &= \mathbf{1120nm}
-\end{align}
-
-\begin{figure}[H]\centering
-    \includegraphics[width=0.8\linewidth]{assets/NAND4-inside-structure.png}
-    \caption{NAND4 内部结构}
-    \label{fig:nand4_structure}
-\end{figure}
-
-如图\ref{fig:nand4_structure}所示，输入端口为 A, B, C, D，其中 A 为最靠近输出端（Top）的输入，D 为最靠近地电位（Bottom）的输入。
-
-\subsubsection*{最差延时分析}
-
-\textbf{1. 最差下降延时 ($t_{pHL}$):}
-
-\begin{itemize}
-    \item \textbf{输入模式：}A, B, C = 1，D: $0 \to 1$
-    \item \textbf{原因：}此时所有 NMOS 已导通，内部节点电容已充电至高电位。D 导通后，需同时放电负载电容 $C_L$ 和所有内部节点寄生电容，导致 $t_{pHL}$ 最大。
-\end{itemize}
-
-\textbf{2. 最差上升延时 ($t_{pLH}$):}
-
-\begin{itemize}
-    \item \textbf{输入模式：}A, B, C = 1，D: $1 \to 0$
-    \item \textbf{原因：}D 变为 0 时，PMOS 导通，需同时充电 $C_L$ 及所有导通 NMOS 的内部节点电容，等效负载最大，$t_{pLH}$ 最大。
-\end{itemize}
-
-\subsection*{2. AND8 最优延时设计}
-
-\subsubsection*{(1) NAND8 + INV 方案}
-
-\begin{figure}[H]\centering
-    \begin{subfigure}{0.48\columnwidth}
-        \centering
-        \includegraphics[width=\linewidth]{assets/NAND8-02-PRINCIPLE.png}
-        \caption{原理图}
-        \label{fig:nand8_circuit_a}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}{0.48\columnwidth}
-        \centering
-        \includegraphics[width=\linewidth]{assets/NAND8-02-principle-cirucit.png}
-        \caption{测试电路图}
-        \label{fig:nand8_circuit_b}
-    \end{subfigure}
-    \caption{NAND8 原理图与测试电路}
-    \label{fig:nand8_circuit}
-\end{figure}
-
-基于单位反相器尺寸（PMOS = 330\,nm，NMOS = 280\,nm，$C_{\text{unit}} \approx 610\,\text{nm}$），计算路径参数如下：
-
-\begin{enumerate}
-    \item \textbf{逻辑努力 $G$ (Path Logical Effort):}
-    \begin{equation}
-        G = g_{\text{NAND8}} \times g_{\text{INV}} = \frac{8+2}{3} \times 1 = \frac{10}{3}
-    \end{equation}
-
-    \item \textbf{电气努力 $F$ (Path Electrical Effort):}
-    \begin{equation}
-        F = \frac{C_{\text{load}}}{C_{\text{in}}} = \frac{64\,C_{\text{unit}}}{1\,C_{\text{unit}}} = 64
-    \end{equation}
-
-    \item \textbf{分支努力 $B$ (Branching Effort):} 无分支，故 $B = 1$。
-
-    \item \textbf{路径总努力 $H$ (Path Effort):}
-    \begin{equation}
-        H = G \times B \times F = \frac{10}{3} \times 1 \times 64 = \frac{640}{3} \approx 213.33
-    \end{equation}
-
-    \item \textbf{最优级努力 $h$ (Optimal Stage Effort):}
-    \begin{equation}
-        h = \sqrt[N]{H} = \sqrt[2]{213.33} \approx 14.6
-    \end{equation}
-\end{enumerate}
-
-我们采用反向推导法，计算各级门的输入电容系数 $S$（相对于单位反相器）及晶体管物理宽度 $W$。
-
-\subsubsection*{3.1 第二级：反相器 (INV)}
-
-输入电容系数 $S_{INV}$：
-\begin{equation}
-    S_{INV} = \frac{g_{INV} \times C_{load}}{h} = \frac{1 \times 64}{14.6} \approx 4.38
-\end{equation}
-
-晶体管宽度（$W = S \times W_{unit}$）：
-\begin{align*}
-    W_p &= 4.38 \times 330\,\text{nm} \approx \mathbf{1.45\,\mu m} \\
-    W_n &= 4.38 \times 280\,\text{nm} \approx \mathbf{1.23\,\mu m}
-\end{align*}
-
-\subsubsection*{3.2 第一级：8输入与非门 (NAND8)}
-
-输入电容系数 $S_{NAND8}$：
-\begin{equation}
-    S_{NAND8} = \frac{g_{NAND8} \times S_{INV}}{h} = \frac{(10/3) \times 4.38}{14.6} \approx \mathbf{1.0}
-\end{equation}
-
-\textbf{晶体管宽度分配}：总宽预算 $610\,\text{nm}$，按等效电阻匹配原则分配：
-
-\textbf{权重}：NMOS 串联需 8 倍强度（$8 \times 280 = 2240$），PMOS 并联需 1 倍强度（$1 \times 330 = 330$）。
-
-\begin{align*}
-    W_n &= 610\,\text{nm} \times \frac{2240}{2240+330} \approx \mathbf{532\,nm} \\
-    W_p &= 610\,\text{nm} \times \frac{330}{2240+330} \approx \mathbf{78\,nm}
-\end{align*}
-（注：$78\,\text{nm}$ 小于工艺 DRC 最小值，则取工艺允许最小值 $120\,\text{nm}$）
-
-\subsubsection*{(2) NAND4-NOR2 方案}
-
-\begin{figure}[H]\centering
-	\begin{subfigure}{0.48\columnwidth}
-		\centering
-		\includegraphics[width=0.85\linewidth]{assets/NAND8-01-PRINCIPLE-circuit.png}
-		\caption{原理图}
-		\label{fig:nand8_circuit_a}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{0.48\columnwidth}
-		\centering
-		\includegraphics[width=\linewidth]{assets/NAND8-01-PRINCIPLE.png}
-		\caption{测试电路图}
-		\label{fig:nand8_circuit_b}
-	\end{subfigure}
-	\caption{原理图与测试电路}
-	\label{fig:nand8_circuit}
-\end{figure}
-
-\subsubsection*{路径参数提取}
-
-\begin{itemize}
-    \item \textbf{路径逻辑努力 $G$:}
-    \begin{align*}
-        \text{第一级 (NAND4):} \quad & g_1 = \frac{4+2}{3} = 2 \\
-        \text{第二级 (NOR2):} \quad & g_2 = \frac{2\times2+1}{3} = \frac{5}{3} \approx 1.67 \\
-        \text{总逻辑努力:} \quad & G = g_1 \times g_2 = 2 \times \frac{5}{3} = \frac{10}{3}
-    \end{align*}
-
-    \item \textbf{路径电气努力 $F$:}
-    \begin{equation*}
-        F = \frac{C_{\text{load}}}{C_{\text{in}}} = \frac{64}{1} = 64
-    \end{equation*}
-
-    \item \textbf{路径分支努力 $B$:} 无分支结构，故 $B=1$。
-
-    \item \textbf{路径总努力 $H$:}
-    \begin{equation*}
-        H = G \times B \times F = \frac{10}{3} \times 1 \times 64 = \frac{640}{3} \approx 213.33
-    \end{equation*}
-\end{itemize}
-
-\subsubsection*{最优级努力计算}
-
-为使路径延时最小，各级努力应相等：
-\begin{equation*}
-    h = \sqrt[N]{H} = \sqrt[2]{213.33} \approx 14.6
-\end{equation*}
-
-我们采用反向推导法，计算各级门的尺寸系数 $S$（$S = C_{in}/C_{unit}$）及晶体管物理宽度。
-
-\subsubsection*{第二级：2 输入或非门 (NOR2)}
-
-输入电容系数：
-\begin{equation}
-    S_{\text{NOR2}} = \frac{g_{\text{NOR2}} \times C_{\text{load}}}{h} = \frac{(5/3) \times 64}{14.6} \approx \mathbf{7.31}
-\end{equation}
-即总宽度预算为 $7.31 \times 610\,\text{nm} \approx 4460\,\text{nm}$。
-
-晶体管宽度分配：NOR2 结构为 PMOS 串联（2 管），NMOS 并联（2 管）。
-\begin{itemize}
-    \item 权重：PMOS 需加倍（$2 \times 330 = 660$），NMOS 保持单位（$1 \times 280 = 280$）。
-    \item PMOS：$W_p = 4460 \times \frac{660}{660+280} \approx \mathbf{3.13\,\mu m}$
-    \item NMOS：$W_n = 4460 \times \frac{280}{660+280} \approx \mathbf{1.33\,\mu m}$
-\end{itemize}
-
-\subsubsection*{第一级：4 输入与非门 (NAND4)}
-
-输入电容系数：
-\begin{equation}
-    S_{\text{NAND4}} = \frac{g_{\text{NAND4}} \times S_{\text{NOR2}}}{h} = \frac{2 \times 7.31}{14.6} \approx \mathbf{1.0}
-\end{equation}
-
-即总宽度预算为 $1.0 \times 610\,\text{nm} = 610\,\text{nm}$。
-
-晶体管宽度分配：NAND4 结构为 NMOS 串联（4 管），PMOS 并联（4 管）。
-\begin{itemize}
-    \item 权重：NMOS 需四倍（$4 \times 280 = 1120$），PMOS 保持单位（$1 \times 330 = 330$）。
-    \item NMOS：$W_n = 610 \times \frac{1120}{1120+330} \approx \mathbf{471\,nm}$
-    \item PMOS：$W_p = 610 \times \frac{330}{1120+330} \approx \mathbf{139\,nm}$
-\end{itemize}
-
-\subsubsection*{(3) NAND2-NOR2-NAND2-INV 方案}
-
-\begin{figure}[H]\centering
-	\begin{subfigure}{0.48\columnwidth}
-		\centering
-		\includegraphics[width=0.85\linewidth]{assets/NAND8-03-PRINCIPLE-circuit.png}
-		\caption{原理图}
-		\label{fig:nand8_circuit_a}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{0.48\columnwidth}
-		\centering
-		\includegraphics[width=\linewidth]{assets/NAND8-03-PRINCIPLE.png}
-		\caption{测试电路图}
-		\label{fig:nand8_circuit_b}
-	\end{subfigure}
-	\caption{原理图与测试电路}
-	\label{fig:nand8_circuit}
-\end{figure}
-
-\subsubsection*{路径参数提取}
-
-\begin{itemize}
-    \item \textbf{路径逻辑努力 $G$ (Path Logical Effort):}
-    \begin{align*}
-        \text{第一级 (NAND2):} \quad & g_1 = \frac{2+2}{3} = \frac{4}{3} \\
-        \text{第二级 (NOR2):} \quad & g_2 = \frac{2\times2+1}{3} = \frac{5}{3} \\
-        \text{第三级 (NAND2):} \quad & g_3 = \frac{4}{3} \\
-        \text{第四级 (INV):} \quad & g_4 = 1 \\
-        \text{总逻辑努力:} \quad & G = g_1 \times g_2 \times g_3 \times g_4 = \frac{4}{3} \times \frac{5}{3} \times \frac{4}{3} \times 1 = \frac{80}{27} \approx 2.96
-    \end{align*}
-
-    \item \textbf{路径电气努力 $F$ (Path Electrical Effort):}
-    \begin{equation*}
-        F = \frac{C_{\text{load}}}{C_{\text{in}}} = \frac{64}{1} = 64
-    \end{equation*}
-
-    \item \textbf{路径总努力 $H$ (Path Effort):}
-    \begin{equation*}
-        H = G \times B \times F = \frac{80}{27} \times 1 \times 64 \approx 189.63
-    \end{equation*}
-\end{itemize}
-
-\subsubsection*{最优级努力计算}
-
-为使路径延时最小，各级努力应相等 ($N=4$)：
-\begin{equation*}
-    h = \sqrt[4]{H} = \sqrt[4]{189.63} \approx 3.71
-\end{equation*}
-
-我们采用反向推导法，计算各级门的尺寸系数 $S$ ($S=C_{in}/C_{unit}$) 及晶体管物理宽度。
-
-\subsubsection*{第 4 级：反相器 (INV)}
-输入电容系数：
-\begin{equation}
-    S_{4} = \frac{g_{4} \times C_{load}}{h} = \frac{1 \times 64}{3.71} \approx \mathbf{17.25}
-\end{equation}
-晶体管宽度：
-\begin{align*}
-    W_p &= 17.25 \times 330\,\text{nm} \approx \mathbf{5.69\,\mu m} \\
-    W_n &= 17.25 \times 280\,\text{nm} \approx \mathbf{4.83\,\mu m}
-\end{align*}
-
-\subsubsection*{第 3 级：2 输入与非门 (NAND2)}
-输入电容系数：
-\begin{equation}
-    S_{3} = \frac{g_{3} \times S_{4}}{h} = \frac{(4/3) \times 17.25}{3.71} \approx \mathbf{6.20}
-\end{equation}
-晶体管总宽度：
-\begin{equation*}
-    W_{\text{tot}} = 6.20 \times 610\,\text{nm} \approx 3782\,\text{nm}
-\end{equation*}
-NAND2 权重分配（NMOS:PMOS = 2:1）：
-\begin{align*}
-    W_n &= 3782 \times \frac{2}{3} \approx \mathbf{2.52\,\mu m} \\
-    W_p &= 3782 \times \frac{1}{3} \approx \mathbf{1.26\,\mu m}
-\end{align*}
-
-\subsubsection*{第 2 级：2 输入或非门 (NOR2)}
-输入电容系数：
-\begin{equation}
-    S_{2} = \frac{g_{2} \times S_{3}}{h} = \frac{(5/3) \times 6.20}{3.71} \approx \mathbf{2.79}
-\end{equation}
-晶体管总宽度：
-\begin{equation*}
-    W_{\text{tot}} = 2.79 \times 610\,\text{nm} \approx 1702\,\text{nm}
-\end{equation*}
-NOR2 权重分配（PMOS:NMOS = 2:1）：
-\begin{align*}
-    W_p &= 1702 \times \frac{2}{3} \approx \mathbf{1.13\,\mu m} \\
-    W_n &= 1702 \times \frac{1}{3} \approx \mathbf{567\,\text{nm}}
-\end{align*}
-
-\subsubsection*{第 1 级：2 输入与非门 (NAND2)}
-输入电容系数：
-\begin{equation}
-    S_{1} = \frac{g_{1} \times S_{2}}{h} = \frac{(4/3) \times 2.79}{3.71} \approx \mathbf{1.0}
-\end{equation}
-（验证：满足输入约束 $C_{in}=1$）
-
-晶体管总宽度：
-\begin{equation*}
-    W_{\text{tot}} = 610\,\text{nm}
-\end{equation*}
-NAND2 权重分配（NMOS:PMOS = 2:1）：
-\begin{align*}
-    W_n &= 610 \times \frac{2}{3} \approx \mathbf{406\,\text{nm}} \\
-    W_p &= 610 \times \frac{1}{3} \approx \mathbf{203\,\text{nm}}
-\end{align*}
-
-\subsubsection*{两级反相器链（基准电路）设计计算}
-
-为评估 8 输入逻辑电路的延时代价，构建一组等效驱动能力的纯反相器链作为对照基准：
-
-\begin{itemize}
-    \item \textbf{电路拓扑：} INV (第一级) $\rightarrow$ INV (第二级)
-    \item \textbf{基准参数：} 单位反相器 $W_p=330\,\text{nm}$, $W_n=280\,\text{nm}$，输入电容 $C_{\text{unit}} \approx 610\,\text{nm}$
-    \item \textbf{控制变量：}
-    \begin{itemize}
-        \item 输入电容：$C_{\text{in}} = 8\,C_{\text{unit}}$（与 NAND8 实验保持一致，确保前级驱动负载相同）
-        \item 输出负载：$C_{\text{load}} = 64\,C_{\text{unit}}$（保持一致）
-    \end{itemize}
-\end{itemize}
-
-\paragraph{1. 逻辑努力参数计算}
-
-\begin{enumerate}[label=\arabic*.]
-    \item \textbf{路径参数提取}
-    \begin{align*}
-        &\text{路径逻辑努力 } G: \quad g_1 = g_2 = 1 \\
-        &G = g_1 \times g_2 = 1 \times 1 = 1 \\
-        &\text{路径电气努力 } F: \quad F = \frac{C_{\text{load}}}{C_{\text{in}}} = \frac{64}{8} = 8 \\
-        &\text{路径总努力 } H: \quad H = G \times B \times F = 1 \times 1 \times 8 = 8
-    \end{align*}
-
-    \item \textbf{最优级努力计算}
-    \begin{equation*}
-        h = \sqrt[N]{H} = \sqrt[2]{8} \approx 2.83
-    \end{equation*}
-
-    \item \textbf{晶体管尺寸计算}
-    \begin{enumerate}[label*=\arabic*.]
-        \item \textbf{第一级：反相器 (INV1)}
-        \begin{align*}
-            &\text{输入电容系数 } S_1 = 8.0 \\
-            &W_p = 8.0 \times 330\,\text{nm} = \mathbf{2.64\,\mu m} \\
-            &W_n = 8.0 \times 280\,\text{nm} = \mathbf{2.24\,\mu m}
-        \end{align*}
-
-        \item \textbf{第二级：反相器 (INV2)}
-        \begin{align*}
-            &S_2 = \frac{g_2 \times C_{\text{load}}}{h} = \frac{1 \times 64}{2.83} \approx \mathbf{22.6} \\
-            &W_p = 22.6 \times 330\,\text{nm} \approx \mathbf{7.46\,\mu m} \\
-            &W_n = 22.6 \times 280\,\text{nm} \approx \mathbf{6.33\,\mu m}
-        \end{align*}
-    \end{enumerate}
-\end{enumerate}
-
 % 实验结果
 \section*{五、实验结果}
-
-\subsection*{1. NAND4 最差情况延时}
-
-\begin{figure}[H]\centering
-	\includegraphics[width=0.8\columnwidth]{assets/(a)worst_delay_time.png}
-	\caption{NAND4 最差情况延时测试结果}
-	\label{fig:nand4_worst_delay}
-\end{figure}
-
-基于波形图中的 Marker 测量数据如下：
-
-\begin{itemize}
-    \item \textbf{输入翻转时刻 ($V_1$)：} 输入信号 /D 下降至 $50\% V_{DD}$ 的时刻为 \textbf{15.020 ns}。
-    \item \textbf{输出翻转时刻 ($V_2$)：} 输出信号 /net017 上升至 $50\% V_{DD}$ 的时刻为 \textbf{15.058 ns}。
-    \item \textbf{传播延时 ($t_{pLH}$) 测量值：}
-    \begin{equation*}
-        t_{pLH} = |V_2 - V_1| = 37.925\,\text{ps}
-    \end{equation*}
-\end{itemize}
-
-\textbf{最差情况验证：} 本次测量模拟了 $t_{pLH}$ 的最差情况。当底部输入 D 从 1 变为 0 时，上方串联的 NMOS 管（A, B, C）仍处于导通状态。此时，PMOS 网络的上拉路径不仅需要驱动外部负载电容，还必须同时对所有导通的 NMOS 内部节点寄生电容进行充电。波形图清晰地展示了这一充电过程，证实了该输入模式确为上升延时的最严苛条件。
-
-\subsection*{2. AND8 最优延时设计}
-
-\subsubsection*{(1) NAND8 - INV 方案}
-
-\begin{figure}[H]\centering
-	\begin{subfigure}{0.48\columnwidth}
-		\centering
-		\includegraphics[width=\linewidth]{assets/(b)(NAND8-inv)H_RISE_WORST_improved.png}
-		\caption{NAND8-INV 最差情况上升延时测试结果}
-		\label{fig:nand8_worst_rise_delay}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{0.48\columnwidth}
-		\centering
-		\includegraphics[width=\linewidth]{assets/(b)(NAND8-inv)H_FALL_WORST_improved.png}
-		\caption{NAND8-INV 最差情况下降延时测试结果}
-		\label{fig:nand8_worst_fall_delay}
-	\end{subfigure}
-	\caption{NAND8 + INV 最优延时测试结果}
-	\label{fig:nand8_worst_delay}
-\end{figure}
-
-根据瞬态仿真波形图，在最差输入模式（输入 H 翻转）下的延时测量数据如下：
-
-\begin{itemize}
-    \item \textbf{下降传播延时} ($D_1$ / $t_{pHL}$)：\\
-    测试条件：输入 \texttt{/H} 由高变低 ($1 \to 0$)，输出 \texttt{/OUTPUT} 随之由高变低。\\
-    测量数据：$|V_2 - V_1| = \mathbf{91.086\,\text{ps}}$。
-    \item \textbf{上升传播延时} ($D_2$ / $t_{pLH}$)：\\
-    测试条件：输入 \texttt{/H} 由低变高 ($0 \to 1$)，输出 \texttt{/OUTPUT} 随之由低变高。\\
-    测量数据：$|V_5 - V_4| = \mathbf{151.922\,\text{ps}}$。
-\end{itemize}
-
-\subparagraph{平均延时计算}
-根据实验要求的加权平均公式：
-\begin{align*}
-    D_{\text{avg}} &= 0.5 \times D_1 + 0.5 \times D_2 \\
-    &= 0.5 \times 91.086\,\text{ps} + 0.5 \times 151.922\,\text{ps} \\
-    &\approx \mathbf{121.504\,\text{ps}}
-\end{align*}
-
-\subsubsection*{(2) NAND4 - NOR2 方案}
-
-\begin{figure}[H]\centering
-	\begin{subfigure}{0.48\columnwidth}
-		\centering
-		\includegraphics[width=\linewidth]{assets/(b)(NAND4-NOR2)H_RISE_WORST_improved.png}
-		\caption{NAND4 - NOR2 最差情况上升延时测试结果}
-		\label{fig:NAND4-NOR2_worst_rise_delay}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{0.48\columnwidth}
-		\centering
-		\includegraphics[width=\linewidth]{assets/(b)(NAND4-NOR2)H_FALL_WORST_improved.pdf.png}
-		\caption{NAND4 - NOR2 最差情况下降延时测试结果}
-		\label{fig:NAND4-NOR2_worst_fall_delay}
-	\end{subfigure}
-	\caption{NAND4 - NOR2 最优延时测试结果}
-	\label{fig:NAND4-NOR2_worst_delay}
-\end{figure}
-
-根据瞬态仿真波形图，在最差输入模式（输入 H 翻转）下的延时测量数据如下：
-
-\begin{itemize}
-	\item \textbf{下降传播延时} ($D_1$ / $t_{pHL}$)：\\
-	测试条件：输入 \texttt{/H} 由高变低 ($1 \to 0$)，输出 \texttt{/OUTPUT} 随之由高变低。\\
-	测量数据：$|V_2 - V_1| = \mathbf{114.678\,\text{ps}}$。
-	\item \textbf{上升传播延时} ($D_2$ / $t_{pLH}$)：\\
-	测试条件：输入 \texttt{/H} 由低变高 ($0 \to 1$)，输出 \texttt{/OUTPUT} 随之由低变高。\\
-	测量数据：$|V_5 - V_4| = \mathbf{88.665\,\text{ps}}$。
-\end{itemize}
-
-\subparagraph{平均延时计算}
-根据实验要求的加权平均公式：
-\begin{align*}
-	D_{\text{avg}} &= 0.5 \times D_1 + 0.5 \times D_2 \\
-	&= 0.5 \times 114.678\,\text{ps} + 0.5 \times 88.665\,\text{ps} \\
-	&\approx \mathbf{101.672\,\text{ps}}
-\end{align*}
-
-\subsubsection*{(3) NAND2-NOR2-NAND2-INV 方案}
-
-\begin{figure}[H]\centering
-	\begin{subfigure}{0.48\columnwidth}
-		\centering
-		\includegraphics[width=\linewidth]{assets/(b)(NAND2-NOR2-NAND2-INV)H_RISE_WORST_improved.png}
-		\caption{NAND2-NOR2-NAND2-INV 最差情况上升延时测试结果}
-		\label{fig:NAND2-NOR2-NAND2-INV_worst_rise_delay}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}{0.48\columnwidth}
-		\centering
-		\includegraphics[width=\linewidth]{assets/(b)(NAND2-NOR2-NAND2-INV)H_FALL_WORST_improved.png}
-		\caption{NAND2-NOR2-NAND2-INV 最差情况下降延时测试结果}
-		\label{fig:NAND2-NOR2-NAND2-INV_fall_delay}
-	\end{subfigure}
-	\caption{NAND2-NOR2-NAND2-INV 最优延时测试结果}
-	\label{fig:NAND2-NOR2-NAND2-INV_worst_delay}
-\end{figure}
-
-根据瞬态仿真波形图，在最差输入模式（输入 H 翻转）下的延时测量数据如下：
-
-\begin{itemize}
-	\item \textbf{下降传播延时} ($D_1$ / $t_{pHL}$)：\\
-	测试条件：输入 \texttt{/H} 由高变低 ($1 \to 0$)，输出 \texttt{/OUTPUT} 随之由高变低。\\
-	测量数据：$|V_2 - V_1| = \mathbf{69.538\,\text{ps}}$。
-	\item \textbf{上升传播延时} ($D_2$ / $t_{pLH}$)：\\
-	测试条件：输入 \texttt{/H} 由低变高 ($0 \to 1$)，输出 \texttt{/OUTPUT} 随之由低变高。\\
-	测量数据：$|V_5 - V_4| = \mathbf{61.757\,\text{ps}}$。
-\end{itemize}
-
-\subparagraph{平均延时计算}
-根据实验要求的加权平均公式：
-\begin{align*}
-	D_{\text{avg}} &= 0.5 \times D_1 + 0.5 \times D_2 \\
-	&= 0.5 \times 69.538\,\text{ps} + 0.5 \times 61.757\,\text{ps} \\
-	&\approx \mathbf{64.648\,\text{ps}}
-\end{align*}
 
 % 总结
 \section*{六、总结}
 
-\subsection*{1. 实验数据汇总}
+% 附录
+\section*{附录}
+\appendix
+\renewcommand{\thesection}{附录\Alph{section}}
 
-本次实验针对 8 输入 AND 逻辑功能，在相同的输入负载 ($C_{in}=8C_{unit}$) 和输出负载 ($C_{load}=64C_{unit}$) 条件下，对比了三种不同拓扑结构的延时性能。实验测量数据汇总如下表所示：
+\section{相关代码}
 
-\begin{table}[H]
-    \centering
-    \caption{三种 AND8 实现方案的延时性能对比}
-    \label{tab:delay_comparison}
-    \renewcommand{\arraystretch}{1.25}
-    \setlength{\tabcolsep}{4mm}
-    \begin{tabular}{cccc}
-        \hline
-        \textbf{电路拓扑方案} & \textbf{下降延时 $D_1$ (ps)} & \textbf{上升延时 $D_2$ (ps)} & \textbf{平均延时 $D_{avg}$ (ps)} \\
-        \hline
-        NAND8 + INV & 91.086 & 151.922 & 121.504 \\
-        NAND4 + NOR2 & 114.678 & 88.665 & 101.672 \\
-        NAND2-NOR2-NAND2-INV & 69.538 & 61.757 & \textbf{64.648} \\
-        \hline
-    \end{tabular}
-\end{table}
+\section{数据表格}
 
-\subsection*{2. 实验分析与结论}
-
-\begin{enumerate}
-    \item \textbf{大扇入 (High Fan-in) 的代价：}
-    方案 (1) 虽然逻辑级数最少 ($N=2$)，但其第一级 NAND8 存在 8 个串联的 NMOS 管。根据 Elmore 延时模型，串联堆叠高度的增加不仅线性增加了通道电阻，更引入了巨大的内部节点寄生电容。这导致该门的逻辑努力 $g$ 和寄生延时 $p$ 均非常大，且单级努力 $h \approx 14.6$ 远超理论最优值 4，因此总延时表现最差。
-
-    \item \textbf{多级逻辑分解与级努力优化：}
-    方案 (3) 将复杂的 8 输入逻辑分解为 NAND2-NOR2-NAND2-INV 的四级结构。尽管级数增加 ($N=4$)，但每一级逻辑门的晶体管串联数量仅为 2，显著降低了单级的逻辑努力。计算表明，该方案的级努力 $h \approx 3.71$ 非常接近理论上的延时最优甜点 ($h=4$)。
-
-    \item \textbf{结论：}
-    实验数据显示，方案 (3) 的平均延时 (64.65 ps) 相比方案 (1) (121.50 ps) 降低了约 \textbf{47\%}。这证明了在驱动大负载 ($F=64$) 的场景下，单纯减少逻辑级数并不一定能获得最小延时。通过合理的逻辑分解降低单级复杂度，并依据逻辑努力理论进行尺寸缩放，是实现 VLSI 延时优化的核心策略。
-\end{enumerate}
+\section{其他材料}
 
 \end{document}
