@@ -102,6 +102,8 @@
 
 \subsection*{4.2\ \texttt{lab3\_mycell} 设计与功耗综合优化}
 
+在设计初期，我们对基准电路 lab3\_a（基于 4 输入或 8 输入 NAND 门直连反相器）的局限性进行分析：
+
 \subsubsection*{\texttt{lab3\_a} 电路设计分析}
 
 \begin{figure}[H]\centering
@@ -110,9 +112,20 @@
 	\label{fig:lab3_a_circuit}
 \end{figure}
 
-如图\ref{fig:lab3_a_circuit}可见，\texttt{lab3\_a} 采用了四输入与非门与非门级联的结构实现功能，但是肉眼可见其扇入较大，导致延时较大，能耗较高。因此，在设计 \texttt{lab3\_mycell} 时，应考虑减少扇入，提高电路的速度和能效。
+大扇入 NAND 门存在严重的堆叠效应，为平衡 $N$ 管串联带来的导通电阻，必须将 NMOS 尺寸放大 $N$ 倍。
 
-\subsubsection*{\texttt{lab3\_mycell\_01} 电路设计}
+\textbf{EDP 瓶颈}：
+
+\begin{itemize}
+	\item \textbf{延时（$D$）}：串联管导致巨大的寄生延时（$P \propto N$），导致本征速度极慢。
+	\item \textbf{能耗（$E$）}：为了补偿速度而被迫增大的晶体管尺寸，带来了巨大的栅极电容和扩散电容，导致动态功耗激增。
+\end{itemize}
+
+为了找到能耗延时积最小的结构，我尝试了三种替代\texttt{lab3\_a}逻辑实现方式：
+
+\subsubsection*{并行树形结构 (\texttt{lab3\_mycell\_01})}
+
+\textbf{设计思路}：利用 De Morgan 定律，我将 AND4 分解为两级逻辑：\texttt{NAND2 // NAND2 -> NOR2}，将关键路径上晶体管的\textbf{最大堆叠高度}从 4 管串联降低至 2 管串联。
 
 \begin{figure}[H]\centering
 	\includegraphics[width=0.6\columnwidth]{assets/5.png}
@@ -120,7 +133,46 @@
 	\label{fig:lab3_mycell_01_circuit}
 \end{figure}
 
-\subsubsection*{\texttt{lab3\_mycell\_02} 电路设计}
+降低能耗延时积 (EDP) 的首要手段是降低寄生参数，而非盲目增大驱动。
+
+\begin{enumerate}
+	\item \textbf{打断串联链}：利用 De Morgan 定律将 4 管串联（或 8 管串联）分解为多级逻辑。优势在于 mycell\_01 中最大的串联数仅为 2（NAND2 或 NOR2），相比于基准电路，其寄生延时（$P$）减半。
+	\item \textbf{降低无效电容 (Reducing $C$)}：由于串联数减少，NAND2 的 NMOS 只需放大 2 倍即可平衡电阻。意味着更小的栅电容和内部节点电容。直接降低了每一次翻转所需的电荷量（$Q$），从而降低能耗（$E$）。
+\end{enumerate}
+
+\paragraph{参数扫描设计}
+
+由于工艺最小宽度为 120 nm，故参数 a 的理论下限为 120/330 ≈ 0.36（此处取 0.4），参数 o 的理论下限为 120/280 ≈ 0.43（此处取 0.5）。
+
+对 a 与 o 进行粗略参数扫描，共设 36 个取样点：
+
+\begin{figure}[H]\centering
+	\begin{subfigure}{0.5\columnwidth}
+		\centering
+		\includegraphics[width=0.85\linewidth]{assets/8.png}
+		\caption{lab3\_mycell\_nand2参数}
+		\label{fig:nand2_params}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{0.48\columnwidth}
+		\centering
+		\includegraphics[width=\linewidth]{assets/9.png}
+		\caption{lab3\_mycell\_nor2参数}
+		\label{fig:nor2_params}
+	\end{subfigure}
+	\caption{参数扫描设计}
+	\label{fig:parameter_sweep_design}
+\end{figure}
+
+\begin{figure}[H]\centering
+	\includegraphics[width=1\columnwidth]{assets/10.png}
+	\caption{36步参数扫描设置}
+	\label{fig:parameter_sweep_setup}
+\end{figure}
+
+\subsubsection*{驱动能力权衡，引入链式结构(lab3\_mycell\_02)}
+
+在仿真 mycell01 后，我发现树形结构虽然本征性能优异，但在驱动 64 倍大负载 时显得力不从心。最后一级 NOR2 需要做得非常大才能推动负载，这导致了前级驱动后级的困难。因此，我尝试了 \texttt{lab3\_mycell\_02}（链式结构）。思考：通过增加级数（流水线深度），利用反相器极强的驱动能力 ($g=1$) 来承担“搬运电荷”的重任，试图缓解大负载下的延时问题。局限：虽然驱动力改善了，但级数过多增加了总的开关活动率，可能导致能耗回升。
 
 \begin{figure}[H]\centering
 	\includegraphics[width=1\columnwidth]{assets/6.png}
