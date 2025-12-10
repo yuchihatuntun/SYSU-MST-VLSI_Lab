@@ -1,10 +1,10 @@
-This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2023.11.4)  10 DEC 2025 21:03
+This is XeTeX, Version 3.141592653-2.6-0.999995 (TeX Live 2023) (preloaded format=xelatex 2023.11.4)  10 DEC 2025 20:33
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**"e:/Github Repos/SYSU-MST-VLSI_Lab/VLSI_Lab-03/VLSI_Lab-03"
-(e:/Github Repos/SYSU-MST-VLSI_Lab/VLSI_Lab-03/VLSI_Lab-03.tex
+**"e:/Github Repos/SYSU-MST-VLSI_Lab/VLSI_Lab-04/VLSI_Lab-04"
+(e:/Github Repos/SYSU-MST-VLSI_Lab/VLSI_Lab-04/VLSI_Lab-04.tex
 LaTeX2e <2022-11-01> patch level 1
 L3 programming layer <2023-02-22> (d:/texlive/2023/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2022/07/02 v1.4n Standard LaTeX document class
@@ -758,8 +758,8 @@ Package xeCJK Warning: Redefining CJKfamily `\CJKsfdefault' (Microsoft YaHei).
 Package xeCJK Warning: Redefining CJKfamily `\CJKttdefault' (FangSong).
 
 Package hyperref Info: Option `colorlinks' set `true' on input line 43.
-(./VLSI_Lab-03.aux)
-\openout1 = `VLSI_Lab-03.aux'.
+(./VLSI_Lab-04.aux)
+\openout1 = `VLSI_Lab-04.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 45.
 LaTeX Font Info:    ... okay on input line 45.
@@ -876,9 +876,9 @@ Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: hyperref package is loaded.
 Package caption Info: End \AtBeginDocument code.
 Package hyperref Info: Link coloring ON on input line 45.
-(./VLSI_Lab-03.out) (./VLSI_Lab-03.out)
+(./VLSI_Lab-04.out) (./VLSI_Lab-04.out)
 \@outlinefile=\write4
-\openout4 = `VLSI_Lab-03.out'.
+\openout4 = `VLSI_Lab-04.out'.
 
 
 Package fontspec Info: Could not resolve font "KaiTi/BI" (it probably doesn't
@@ -909,35 +909,6 @@ LaTeX Font Warning: Font shape `TU/KaiTi(0)/b/n' undefined
 (Font)              using `TU/KaiTi(0)/m/n' instead on input line 49.
 
 
-Package fontspec Info: Could not resolve font "FangSong/BI" (it probably
-(fontspec)             doesn't exist).
-
-
-Package fontspec Info: Could not resolve font "FangSong/B" (it probably
-(fontspec)             doesn't exist).
-
-
-Package fontspec Info: Could not resolve font "FangSong/I" (it probably
-(fontspec)             doesn't exist).
-
-LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <12> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 93.
-
-Package fontspec Info: Font family 'FangSong(0)' created for font 'FangSong'
-(fontspec)             with options [Script={CJK}].
-(fontspec)              
-(fontspec)              This font family consists of the following NFSS
-(fontspec)             series/shapes:
-(fontspec)              
-(fontspec)             - 'normal' (m/n) with NFSS spec.:
-(fontspec)             <->"FangSong/OT:script=hani;language=dflt;"
-(fontspec)             - 'small caps'  (m/sc) with NFSS spec.: 
-
-LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <14.4> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 93.
-File: assets/1.png Graphic file (type bmp)
-<assets/1.png>
-
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
 (fancyhdr)                \setlength{\headheight}{14.49998pt}.
@@ -947,8 +918,8 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 [1
 
 ]
-File: assets/4.png Graphic file (type bmp)
-<assets/4.png>
+File: images/image-2025-12-10-19-20-52.png Graphic file (type bmp)
+<images/image-2025-12-10-19-20-52.png>
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -958,8 +929,10 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [2]
-File: assets/5.png Graphic file (type bmp)
-<assets/5.png>
+File: images/image-2025-12-10-19-35-52.png Graphic file (type bmp)
+<images/image-2025-12-10-19-35-52.png>
+File: images/image-2025-12-10-20-07-15.png Graphic file (type bmp)
+<images/image-2025-12-10-20-07-15.png>
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -969,12 +942,9 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [3]
-Missing character: There is no ≈ (U+2248) in font [lmroman12-regular]:mapping=tex-text;!
-Missing character: There is no ≈ (U+2248) in font [lmroman12-regular]:mapping=tex-text;!
-File: assets/8.png Graphic file (type bmp)
-<assets/8.png>
-File: assets/9.png Graphic file (type bmp)
-<assets/9.png>
+File: images/image-2025-12-10-20-21-48.png Graphic file (type bmp)
+<images/image-2025-12-10-20-21-48.png>
+
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -983,12 +953,8 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [4]
-File: assets/10.png Graphic file (type bmp)
-<assets/10.png>
-File: assets/6.png Graphic file (type bmp)
-<assets/6.png>
-File: assets/7.png Graphic file (type bmp)
-<assets/7.png>
+File: images/image-2025-12-10-20-25-06.png Graphic file (type bmp)
+<images/image-2025-12-10-20-25-06.png>
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -998,8 +964,10 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [5]
-File: assets/2.png Graphic file (type bmp)
-<assets/2.png>
+File: images/image-2025-12-10-20-26-08.png Graphic file (type bmp)
+<images/image-2025-12-10-20-26-08.png>
+File: images/image-2025-12-10-20-29-02.png Graphic file (type bmp)
+<images/image-2025-12-10-20-29-02.png>
 
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
@@ -1009,6 +977,11 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [6]
+File: images/image-2025-12-10-20-30-30.png Graphic file (type bmp)
+<images/image-2025-12-10-20-30-30.png>
+File: images/image-2025-12-10-20-31-34.png Graphic file (type bmp)
+<images/image-2025-12-10-20-31-34.png>
+
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -1017,13 +990,6 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
 [7]
-File: assets/3.png Graphic file (type bmp)
-<assets/3.png>
-File: images/image-2025-12-10-20-47-34.png Graphic file (type bmp)
-<images/image-2025-12-10-20-47-34.png>
-File: images/image-2025-12-10-20-49-25.png Graphic file (type bmp)
-<images/image-2025-12-10-20-49-25.png>
-
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -1031,99 +997,26 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller to compensate:
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[8]
-File: images/image-2025-12-10-20-48-58.png Graphic file (type bmp)
-<images/image-2025-12-10-20-48-58.png>
-
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[9]
-File: images/image-2025-12-10-20-51-27.png Graphic file (type bmp)
-<images/image-2025-12-10-20-51-27.png>
-File: images/image-2025-12-10-20-53-16.png Graphic file (type bmp)
-<images/image-2025-12-10-20-53-16.png>
-
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[10]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[11]
-Overfull \hbox (32.4372pt too wide) in paragraph at lines 338--350
- [][] 
- []
-
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[12]
-File: images/image-2025-12-10-20-59-41.png Graphic file (type bmp)
-<images/image-2025-12-10-20-59-41.png>
-
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[13]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[14]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[15]
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 14.49998pt, for example:
-(fancyhdr)                \setlength{\headheight}{14.49998pt}.
-(fancyhdr)                You might also make \topmargin smaller to compensate:
-(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
-
-[16] (./VLSI_Lab-03.aux)
+[8] (./VLSI_Lab-04.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package rerunfilecheck Info: File `VLSI_Lab-03.out' has not changed.
-(rerunfilecheck)             Checksum: C43712C398B3BDE7524F05EA3A46FC5E;411.
+
+Package rerunfilecheck Warning: File `VLSI_Lab-04.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `VLSI_Lab-04.out':
+(rerunfilecheck)             Before: E560E277BA50EA9FB71D124469D8121C;228
+(rerunfilecheck)             After:  D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 44463 strings out of 476683
- 1102718 string characters out of 5807575
- 1863012 words of memory out of 5000000
- 64153 multiletter control sequences out of 15000+600000
- 518125 words of font info for 88 fonts, out of 8000000 for 9000
+ 44281 strings out of 476683
+ 1097481 string characters out of 5807575
+ 1864012 words of memory out of 5000000
+ 63998 multiletter control sequences out of 15000+600000
+ 518029 words of font info for 76 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 103i,12n,105p,488b,597s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 103i,11n,105p,488b,623s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on VLSI_Lab-03.pdf (16 pages).
+Output written on VLSI_Lab-04.pdf (8 pages).

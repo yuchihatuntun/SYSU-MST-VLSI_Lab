@@ -221,18 +221,226 @@ Y = A \cdot B \cdot C \cdot D
 	\label{fig:lab3_a_energy_consumption}
 \end{figure}
 
+\subsection*{5.1\ \texttt{lab3\_mycell} 设计与功耗综合优化}
+
+\subsubsection*{\texttt{lab3\_a} 参考能耗延时积}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-10-20-47-34.png}
+  \caption{\texttt{lab3\_a} 能耗延时积结果}
+  \label{fig:image-2025-12-10-20-47-34.png}
+\end{figure}
+
+\subsubsection*{\texttt{lab3\_mycell\_01}}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-10-20-49-25.png}
+  \caption{粗扫参数设置}
+  \label{fig:image-2025-12-10-20-49-25.png}
+\end{figure}
+
+因为宽度最小值是 120n，所以 a 最低不得低于120/330 = 0.4 ， o 最低不得低于120/280 = 0.5
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-10-20-48-58.png}
+  \caption{能耗延时积扫描结果}
+  \label{fig:image-2025-12-10-20-48-58.png}
+\end{figure}
+
+\paragraph{结果分析}
+
+\begin{enumerate}
+	\item 当参数 $a=0.4$ 时，能耗最低，但延时显著增加（相比于第二小的 $a=2.32$ 的曲线）。
+	\item 对于所有参数曲线，能耗延时积的极值大致出现在 $o=6 \sim 8$ 的区间。
+\end{enumerate}
+
+因此，进一步开展了第二轮参数粗略扫描实验：
+
+\paragraph{第二轮参数扫描设计}
+针对参数 $a$ 与 $o$，本次扫描共设置 64 个取样点，具体参数配置如下：
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-10-20-51-27.png}
+  \caption{二次参数粗扫设置}
+  \label{fig:image-2025-12-10-20-51-27.png}
+\end{figure}
+
+经参数扫描分析，如图\ref{fig:image-2025-12-10-20-53-16.png}，当 $a=1$、$o=0.44$ 时，能耗延时积（EDP）达到 $1.3609z$，较基准电路 \texttt{lab3\_a} 略有降低，验证了优化结构在能耗与延时权衡上的有效性。
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-10-20-53-16.png}
+  \caption{二次参数粗扫结果}
+  \label{fig:image-2025-12-10-20-53-16.png}
+\end{figure}
+
+\subsubsection*{第三轮参数扫描与理论分析}
+
+基于逻辑努力（Logical Effort）理论，计算电路在不同尺寸配置下的延时与能耗权衡，进一步优化能耗-延时积（EDP）。
+
+\paragraph{最小延时尺寸计算}
+
+根据逻辑努力理论，电路达到最小延时时的关键参数如下：
+
+\begin{enumerate}
+	\item \textbf{路径总努力} $H$：
+	\[
+		H = G \times F = \left(\frac{4}{3} \times \frac{5}{3}\right) \times 64 \approx 142.2
+	\]
+	其中 $G$ 为路径逻辑努力，$F$ 为路径电气努力。
+	\item \textbf{最优级努力} $h$：
+	\[
+		h = \sqrt{H} \approx 11.9
+	\]
+	\item \textbf{中间级（NOR2）理论输入电容} $C_{\text{mid, speed}}$：
+	\[
+		C_{\text{mid, speed}} = \frac{g_{\text{NOR2}} \times C_{\text{load}}}{h} = \frac{1.67 \times 64}{11.9} \approx \mathbf{8.9}
+	\]
+	此时电路速度最快，但能耗较高。
+\end{enumerate}
+
+\paragraph{最小面积尺寸计算}
+
+为实现最低能耗，需采用满足驱动要求的最小面积配置：
+
+\[
+	C_{\text{mid, min}} \approx \mathbf{1.0}
+\]
+即中间级（NOR2）输入电容与前级（NAND2）保持一致。
+
+\paragraph{优化变量设定}
+
+选取第二级 NOR2 的尺寸系数 $K$ 作为优化变量，具体设定如下：
+
+\begin{itemize}
+	\item \textbf{第一级（NAND2）}：输入电容固定为 $C_{\text{in}} = 1$（工艺约束）。
+	\item \textbf{第二级（NOR2）}：尺寸系数 $K$ 扫描范围为 $[1.0,\, 10.0]$。
+	\item \textbf{理论预测}：最小 EDP 通常出现在最小延时尺寸的 $60\% \sim 80\%$ 区间。
+\end{itemize}
+
+\paragraph{结果分析}
+
+经参数扫描与理论分析，发现该方案的能耗-延时积（EDP）未能优于前述优化结构，整体性能表现不及上一轮设计。故本次结果不予详细展示。
+
+\subsubsection*{\texttt{lab3\_mycell\_02}}
+
+为实现驱动能力与能耗的权衡，采用逐级放大结构，并以级间放大倍数 $k$ 作为核心优化变量，使各级电路尺寸按比例递增。具体设计如下：
+
+电路分为三级，每级均包含一个 NAND2 与一个反相器（INV），各级器件尺寸配置如下表所示：
+
+\begin{table}[H]
+	\centering
+	\renewcommand{\arraystretch}{1.2}
+	\begin{tabular}{cccccl}
+		\hline
+		\textbf{级数} & \textbf{器件} & \textbf{PMOS宽度 ($W_p$)} & \textbf{NMOS宽度 ($W_n$)} & \textbf{备注} \\
+		\hline
+		第1级 & NAND2 (I1) & $226\,\mathrm{nm}$ & $384\,\mathrm{nm}$ & 最小基准，固定 \\
+			  & INV (I4)   & $330\,\mathrm{nm}$ & $280\,\mathrm{nm}$ & 单位基准，固定 \\
+		第2级 & NAND2 (I5) & $k \times 226\,\mathrm{nm}$ & $k \times 384\,\mathrm{nm}$ & 一次放大 \\
+			  & INV (I6)   & $k \times 330\,\mathrm{nm}$ & $k \times 280\,\mathrm{nm}$ & 一次放大 \\
+		第3级 & NAND2 (I7) & $k^2 \times 226\,\mathrm{nm}$ & $k^2 \times 384\,\mathrm{nm}$ & 二次放大 \\
+			  & INV (I8)   & $k^2 \times 330\,\mathrm{nm}$ & $k^2 \times 280\,\mathrm{nm}$ & 二次放大（驱动大负载） \\
+		\hline
+	\end{tabular}
+	\caption{逐级放大结构各级器件尺寸配置}
+	\label{tab:stage_amplification}
+\end{table}
+
+实验结果显示，该结构的能耗-延时积（EDP）最低约为 $1.44\,\mathrm{z}$，优化效果有限，未能显著优于前述树形结构方案。
+
+\subsubsection*{\texttt{lab3\_mycell\_03}}
+
+本设计同样采用逐级放大结构，以级间放大倍数 $k$ 作为核心优化变量，使各级器件尺寸按比例递增。具体器件配置如下：
+
+\begin{table}[H]
+	\centering
+	\renewcommand{\arraystretch}{1.2}
+	\begin{tabular}{cccccl}
+		\hline
+		\textbf{级数（路径位置）} & \textbf{器件编号} & \textbf{器件类型} & \textbf{PMOS宽度 ($W_p$)} & \textbf{NMOS宽度 ($W_n$)}  \\
+		\hline
+		第1级      & I0   & NAND2 & $226\,\mathrm{nm}$        & $384\,\mathrm{nm}$         \\
+		辅助级     & I2   & INV   & $330\,\mathrm{nm}$        & $280\,\mathrm{nm}$          \\
+		第2级      & I1   & NOR2  & $k \times 428\,\mathrm{nm}$ & $k \times 182\,\mathrm{nm}$        \\
+		第3级      & I3   & NAND2 & $k^2 \times 226\,\mathrm{nm}$ & $k^2 \times 384\,\mathrm{nm}$  \\
+		第4级      & I4   & INV   & $k^3 \times 330\,\mathrm{nm}$ & $k^3 \times 280\,\mathrm{nm}$  \\
+		\hline
+	\end{tabular}
+	\caption{逐级放大结构各级器件尺寸配置}
+	\label{tab:mycell03_stage_amplification}
+\end{table}
+
+最终最优化的能耗-延时积（EDP）约为 $891.392\,\mathrm{y}$，较前述设计方案有显著提升。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-10-20-59-41.png}
+  \caption{逐级放大结构能耗-延时积（EDP）随放大倍数 $k$ 变化曲线}
+  \label{fig:image-2025-12-10-20-59-41.png}
+\end{figure}
+
 % 总结
 \section*{六、总结}
 
-% 附录
-\section*{附录}
-\appendix
-\renewcommand{\thesection}{附录\Alph{section}}
+本次实验通过对四输入逻辑门电路的设计与优化，深入探究了CMOS电路中能耗（Energy）与延时（Delay）的权衡关系，并重点分析了能耗延时积（EDP）的优化策略。
 
-\section{相关代码}
+\subsection*{6.1\ 实验数据对比}
 
-\section{数据表格}
+通过对四种不同拓扑结构的电路进行仿真与参数扫描，得到的最佳性能指标对比如下表所示：
 
-\section{其他材料}
+\begin{table}[H]
+	\centering
+	\renewcommand{\arraystretch}{1.3}
+	\begin{tabular}{|c|c|c|c|c|}
+		\hline
+		\textbf{电路方案} & \textbf{拓扑结构} & \textbf{关键优化手段} & \textbf{最佳 EDP} & \textbf{相对优化率} \\
+		\hline
+		\texttt{lab3\_a} & NAND4 + INV & 基准电路 & $\approx 1.45\,\mathrm{z}$ & - \\
+		\hline
+		\texttt{mycell\_01} & Tree (NAND2-NOR2) & 降低堆叠高度 & $\approx 1.36\,\mathrm{z}$ & $6.2\%$ \\
+		\hline
+		\texttt{mycell\_02} & Chain (NAND2-INV) & 增强驱动能力 & $\approx 1.44\,\mathrm{z}$ & $0.7\%$ \\
+		\hline
+		\texttt{mycell\_03} & Hybrid (NAND-NOR-INV) & 逻辑努力分配 & $\approx 0.89\,\mathrm{z}$ & $\mathbf{38.6\%}$ \\
+		\hline
+	\end{tabular}
+	\caption{各电路方案性能对比汇总}
+	\label{tab:summary_comparison}
+\end{table}
+
+\subsection*{6.2\ 理论分析与经验总结}
+
+\subsubsection{堆叠效应与逻辑努力}
+实验结果验证了逻辑努力（Logical Effort）理论的核心观点。对于长串联堆叠的逻辑门（如 NAND4），其逻辑努力 $g$ 随输入数量显著增加：
+\[
+g_{\text{NAND}n} = \frac{n+2}{3}
+\]
+对于 \texttt{lab3\_a} 中的 NAND4，其 $g = (4+2)/3 = 2$，导致本征延时较大。而 \texttt{mycell\_01} 将其分解为 NAND2 ($g=4/3$) 和 NOR2 ($g=5/3$) 的组合，虽然级数增加，但单级延时降低，且有效减小了寄生电容。
+
+\subsubsection{EDP 优化的本质}
+能耗延时积 $EDP = E \times D$。
+\begin{itemize}
+	\item \textbf{延时优化}：主要依赖于路径电气努力 $H$ 的均匀分配。根据 $f = g \cdot h$，当各级级努力 $f$ 相等时，路径延时最小。
+	\item \textbf{能耗优化}：主要受总开关电容 $\sum C_L$ 影响。过大的晶体管尺寸虽然降低延时，但会线性增加动态功耗 $P_{dyn} = \alpha f C V_{dd}^2$。
+\end{itemize}
+
+在 \texttt{mycell\_03} 中，通过引入级间放大系数 $k$，我们实际上是在寻找延时下降收益与能耗上升代价之间的平衡点：
+\[
+\frac{\partial (E \cdot D)}{\partial k} = 0
+\]
+实验发现，单纯追求最小延时（Logical Effort 推荐的 $h \approx 4$）往往导致能耗过高，最佳 EDP 点通常位于比最小延时尺寸更小的区域（即“欠驱动”状态）。
+
+\subsection*{6.3\ 不足与改进方向}
+
+\begin{enumerate}
+	\item \textbf{漏功耗忽视}：本次实验主要关注动态功耗。随着工艺尺寸缩小（如本实验涉及的深亚微米工艺），漏电流功耗占比将显著提升。未来的优化模型应引入 $P_{static} = I_{leak} V_{dd}$。
+	\item \textbf{输入向量依赖性}：实验中采用了固定的输入占空比。实际上，不同逻辑门的开关活动率 $\alpha$ 强依赖于输入信号的统计特性。更严谨的设计应针对最坏情况或平均情况进行加权优化。
+	\item \textbf{版图寄生参数}：目前的仿真基于原理图，未考虑互连线电阻电容。在实际物理实现中，复杂的树形结构（如 \texttt{mycell\_01}）可能因布线拥塞导致性能下降，需结合版图后仿真进行验证。
+\end{enumerate}
 
 \end{document}

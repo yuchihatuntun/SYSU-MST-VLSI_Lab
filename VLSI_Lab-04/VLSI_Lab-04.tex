@@ -1,0 +1,243 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage[UTF8]{ctex} 
+\usepackage{geometry} 
+\usepackage{enumitem} 
+\usepackage{titlesec} 
+\usepackage{xcolor} 
+\usepackage{ulem} 
+\usepackage{graphicx} 
+\usepackage{float} 
+\usepackage{amsmath} 
+\usepackage{subcaption}
+\usepackage{circuitikz}
+\usepackage{hyperref} 
+\usepackage{fancyhdr}
+
+\geometry{left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+
+% 设置行距
+\linespread{1.5}
+
+% 设置段落间距
+\setlength{\parskip}{0.5em}
+
+\titleformat{\section}{\Large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+
+\setlist[enumerate,1]{label=\arabic*、, leftmargin=*}
+\setlist[enumerate,2]{label=\arabic*., leftmargin=*}
+
+% XeLaTeX下使用系统字体
+\setCJKmainfont{SimSun}[AutoFakeBold=2.5] % 宋体
+\setCJKsansfont{SimHei} % 黑体
+\setCJKmonofont{FangSong} % 仿宋
+\setCJKfamilyfont{kai}{KaiTi} % 楷体
+\newcommand{\kai}{\CJKfamily{kai}}
+
+% 配置hyperref
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue,
+    citecolor=blue
+}
+
+\begin{document}
+
+% 标题
+\begin{center}
+    {\kai\LARGE\textbf{实验四\ \ 传输门实验}}
+\end{center}
+
+% 页眉页脚
+\pagestyle{fancy}
+\fancyhf{} 
+\fancyhead[L]{\kai 实验四\ \ 传输门实验} % 左侧页眉
+\fancyhead[R]{\href{https://github.com/yuchihatuntun/SYSU-MST-VLSI_Lab}{GitHub} | 23342107\ 徐睿琳}                   % 右侧页眉
+\fancyfoot[C]{\thepage}                       % 页脚居中页码
+\renewcommand{\headrulewidth}{0.4pt}          % 页眉线宽度
+\renewcommand{\footrulewidth}{0pt}            % 页脚线宽度
+
+\begin{center}
+    23342107\ 徐睿琳
+\end{center}
+
+\vspace{0.5cm}
+
+% 实验要求
+\section*{一、实验要求}
+
+    掌握逻辑门的工作原理、功耗优化与速度优化。
+
+% 实验目的
+\section*{二、实验目的}
+\begin{enumerate}
+    \item 掌握传输门的搭建方法；
+    \item 掌握传输门的功耗优化与速度优化；
+\end{enumerate}
+
+% 实验内容
+\section*{三、实验内容}
+\begin{enumerate}
+    \item \textbf{实验内容1}
+    
+    设计一个四输入的伪NMOS NOR 门，nmos管选用最小尺寸(W/L: 120n/40n), pmos管自己选择尺寸, 使得额定输出低电压Vol小于0.1V。同时观察在输入向量ABCD不同情况下的静态功耗，找出在哪个输入向量下的电路静态功耗是最大的, 哪个输入向量下静态功耗最小，对比他们的倍数差距。测试电路已经给出；
+
+    \item \textbf{实验内容2}
+    
+    利用传输门设计一个8选一的多路选择器(MUX)，确保上升延迟和下降延迟基本一致的情况下选用最小的尺寸晶体管来进行，nmos的最小尺寸为(120n/40n)，实验一已经知道与之对应驱动能力一样的pmos尺寸大约为(225n/40n)。 测试电路已经给出，需要测试d1,d2,d3的延迟。该设计只需保证功能正确即可，不需要考虑电路绝对延迟大小或者驱动和负载，但要确保上升延迟和下降延迟基本一致。
+
+\end{enumerate}
+
+% 实验步骤
+\section*{四、实验步骤}
+
+\subsection*{四输入伪NMOS NOR门}
+
+\begin{enumerate}
+    \item \textbf{电路搭建}：根据伪NMOS逻辑结构搭建四输入NOR门电路。下拉网络由四个并联的NMOS管构成，尺寸设定为工艺允许的最小值（$W/L = 120\text{nm}/40\text{nm}$）；上拉网络采用单个栅极接地的PMOS管作为有源负载。
+    
+    \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/image-2025-12-10-19-20-52.png}
+    \caption{四输入伪NMOS NOR门内部电路图}
+    \label{fig:image-2025-12-10-19-20-52.png}
+    \end{figure}
+
+    \item \textbf{参数扫描与尺寸优化}：为满足额定输出低电平 $V_{OL} < 0.1\text{V}$ 的设计约束，我对PMOS管的沟道宽度 $W_p$ 进行参数扫描。分析 $V_{OL}$ 随 $W_p$ 的变化曲线，选取满足电压约束且兼顾面积效率的最佳 $W_p$ 值。
+    
+    原则上，由$V_{OL}$的公式，要想让$V_{OL}$足够小，必须减小$W_p$：
+
+    \[
+    V_{OL} \approx \frac{k_p (V_{DD} + V_{Tp}) \cdot V_{DSATp}}{k_n (V_{DD} - V_{Tn})} \approx \frac{\mu_p \cdot W_p}{\mu_n \cdot W_n} \cdot V_{DSATp}
+    \]
+
+    \item \textbf{静态功耗分析}：在确定的晶体管尺寸下，遍历输入向量 $ABCD$ 的所有逻辑组合（从 $0000$ 至 $1111$）。通过瞬态仿真或直流工作点分析，测量各状态下的静态功耗，识别最大功耗与最小功耗对应的输入向量，并计算两者的倍数差异，以评估电路的功耗特性。
+\end{enumerate}
+
+\subsection*{传输门多路选择器设计}
+
+\subsubsection*{一、三级 MUX2 级联方案}
+
+\begin{enumerate}
+    \item \textbf{电路拓扑构建}：采用分级传输门逻辑设计8选1多路选择器。电路呈 4-2-1 树状结构分为三级级联：
+    \begin{itemize}
+        \item \textbf{第一级}：部署4个2选1 MUX，由最低位地址码 $S_0$ 控制；
+        \item \textbf{第二级}：部署2个2选1 MUX，由次低位地址码 $S_1$ 控制；
+        \item \textbf{第三级}：部署1个2选1 MUX，由最高位地址码 $S_2$ 控制并输出。
+    \end{itemize}
+    晶体管尺寸遵循实验要求：NMOS选用 $120\text{nm}/40\text{nm}$，PMOS选用 $225\text{nm}/40\text{nm}$。
+
+    \item \textbf{延迟不对称性分析}：仿真显示上升延迟 $t_{PLH}$ 比下降延迟 $t_{PHL}$ 大约 $1/3$。该现象源于PMOS与NMOS导通电阻的非理想匹配。
+    
+    传输门在传输高电平（$V_{out} \to V_{DD}$）的后期主要由PMOS导通充电，而在传输低电平（$V_{out} \to 0$）的后期主要由NMOS导通放电。导通电阻近似公式为：
+    \[
+    R_{on} \propto \frac{L}{\mu W (V_{GS} - V_{th})} \implies R \propto \frac{1}{\mu W}
+    \]
+    
+    通常工艺中电子迁移率 $\mu_n$ 约为空穴迁移率 $\mu_p$ 的 2.5 倍。本设计中宽长比之比为 $W_p/W_n = 225/120 = 1.875$。
+    
+    推导两者电阻比值：
+    \[
+    \frac{R_{p}}{R_{n}} \approx \frac{\mu_n W_n}{\mu_p W_p} \approx \frac{2.5 \times 1}{1 \times 1.875} \approx 1.33
+    \]
+    
+    计算结果表明，PMOS主导的充电路径等效电阻约为NMOS主导的放电路径的 $1.33$ 倍。
+
+    \item \textbf{尺寸优化与平衡}：为了消除延迟差异，使上升沿与下降沿时间相等，我对PMOS的宽度 $W_p$ 进行了参数扫描。仿真结果表明，当 $W_p$ 调整至 $500\text{nm}$ 左右时，电路的上升延迟与下降延迟基本趋于一致，实现了时序特性的对称性优化。
+    
+    \begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{images/image-2025-12-10-19-35-52.png}
+    \caption{尺寸参数扫描设置}
+    \label{fig:image-2025-12-10-19-35-52.png}
+    \end{figure}
+
+\end{enumerate}
+
+% 实验结果
+\section*{五、实验结果}
+
+\subsection*{四输入伪NMOS NOR门}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-10-20-07-15.png}
+  \caption{VOL参数扫描探索结果}
+  \label{fig:image-2025-12-10-20-07-15.png}
+\end{figure}
+
+如图\ref{fig:image-2025-12-10-20-07-15.png}可见，最终在$W_p = 200\text{nm}$时，$V_{OL}$小于0.1V，满足设计要求。
+
+如图\ref{fig:image-2025-12-10-20-21-48.png}所示，不同输入向量下的静态功耗差异不是很明显，最大静态功耗出现在输入向量为1111时，最小静态功耗出现在输入向量为0000时，两者相差约1.2倍。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{images/image-2025-12-10-20-21-48.png}
+  \caption{不同输入向量下的静态功耗}
+  \label{fig:image-2025-12-10-20-21-48.png}
+\end{figure}
+
+\subsection*{传输门多路选择器设计}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-10-20-25-06.png}
+  \caption{MUX8 参数粗扫后的上升沿延迟时间}
+  \label{fig:image-2025-12-10-20-25-06.png}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-10-20-26-08.png}
+  \caption{MUX8 参数粗扫后的下降沿延迟时间}
+  \label{fig:image-2025-12-10-20-26-08.png}
+\end{figure}
+
+如图\ref{fig:image-2025-12-10-20-25-06.png}和图\ref{fig:image-2025-12-10-20-26-08.png}所示，通过对PMOS宽度进行参数扫描，最终在$W_p = 500\text{nm}$时，上升沿延迟和下降沿延迟基本一致，仅仅相差$7 ps$，满足设计要求。
+
+\textbf{$d_1$测量结果}：
+
+如图\ref{fig:image-2025-12-10-20-29-02.png}所示，最终测得$d_1$为$69.623 ps$，
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-10-20-29-02.png}
+  \caption{$d_1$测量结果}
+  \label{fig:image-2025-12-10-20-29-02.png}
+\end{figure}
+
+\textbf{$d_2$测量结果}：
+
+如图\ref{fig:image-2025-12-10-20-30-30.png}所示，最终测得$d_2$为$71.645 ps$，
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-10-20-30-30.png}
+  \caption{$d_2$测量结果}
+  \label{fig:image-2025-12-10-20-30-30.png}
+\end{figure}
+
+\textbf{$d_3$测量结果}：
+
+如图\ref{fig:image-2025-12-10-20-31-34.png}所示，最终测得$d_3$为$60.17 ps$，
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-10-20-31-34.png}
+  \caption{$d_3$测量结果}
+  \label{fig:image-2025-12-10-20-31-34.png}
+\end{figure}
+
+% 总结
+\section*{六、总结}
+
+本次实验深入探究了伪NMOS逻辑与传输门逻辑的设计方法及其性能优化策略。
+
+在四输入伪NMOS NOR门设计中，通过权衡输出低电平（$V_{OL}$）与晶体管尺寸，验证了比率逻辑（Ratioed Logic）中上拉与下拉网络导通电阻比值对逻辑电平的关键影响。实验表明，适当减小PMOS负载管宽长比可有效降低$V_{OL}$，但需在静态功耗与噪声容限间取得平衡；同时，静态功耗分析揭示了伪NMOS电路在不同输入向量下的直流直通电流特性，体现了其在面积优势背后的功耗代价。
+
+在8选1传输门多路选择器设计中，重点解决了PMOS与NMOS载流子迁移率差异导致的传输延迟不对称问题。通过参数扫描优化PMOS尺寸，补偿了空穴迁移率较低带来的导通电阻差异，成功实现了上升与下降延迟的均衡匹配。此外，多级级联结构的延迟测试直观展示了RC延时累积效应，加深了对传输门电路级联驱动能力受限特性的理解。
+
+综上，本实验不仅掌握了特定逻辑门电路的搭建与仿真流程，更强化了对数字集成电路中速度、功耗、面积及可靠性等多维设计折衷（Trade-off）的认知。
+
+\end{document}
