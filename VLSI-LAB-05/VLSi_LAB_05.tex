@@ -12,7 +12,7 @@
 \usepackage{circuitikz}
 \usepackage{hyperref} 
 \usepackage{fancyhdr}
-
+\usepackage{booktabs}
 \geometry{left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
 
 % 设置行距
@@ -46,20 +46,20 @@
 
 % 标题
 \begin{center}
-    {\kai\LARGE\textbf{实验X\ \ 此处填写本次实验名称}}
+    {\kai\LARGE\textbf{实验五\ \ 组合和时序逻辑电路}}
 \end{center}
 
 % 页眉页脚
 \pagestyle{fancy}
 \fancyhf{} 
-\fancyhead[L]{\kai 实验X\ \ 此处填写本次实验名称} % 左侧页眉
-\fancyhead[R]{\href{https://github.com/yuchihatuntun/SYSU-MST-VLSI_Lab}{GitHub} | 学生番号\ 君の名は}                   % 右侧页眉
+\fancyhead[L]{\kai 实验五\ \ 组合和时序逻辑电路} % 左侧页眉
+\fancyhead[R]{\href{https://github.com/yuchihatuntun/SYSU-MST-VLSI_Lab}{GitHub} | 23342107\ 徐睿琳}                   % 右侧页眉
 \fancyfoot[C]{\thepage}                       % 页脚居中页码
 \renewcommand{\headrulewidth}{0.4pt}          % 页眉线宽度
 \renewcommand{\footrulewidth}{0pt}            % 页脚线宽度
 
 \begin{center}
-    学生番号\ 君の名は
+    23342107\ 徐睿琳
 \end{center}
 
 \vspace{0.5cm}
@@ -67,33 +67,315 @@
 % 实验要求
 \section*{一、实验要求}
 
+掌握加法器的工作原理、功耗优化与速度优化。掌握寄存器的工作原理及时间参数的测量。
 
 % 实验目的
 \section*{二、实验目的}
 \begin{enumerate}
-    \item 
-    \item 
-    \item 
+    \item 掌握组合逻辑电路的设计方法，了解全加器的搭建方法; 
+    \item 了解加法器的搭建方法，掌握加法器的功耗优化和速度优化; 
+    \item 掌握时序逻辑电路的设计方法，了解寄存器的搭建方法，并理解寄存器的建立时间、保持时间和传播延时；
 \end{enumerate}
 
 % 实验内容
 \section*{三、实验内容}
 \begin{enumerate}
-    \item \textbf{实验内容1}
+    \item \textbf{全加器设计：}设计全加器，验证其功能。
     
 
-    \item \textbf{实验内容2}
+    \item \textbf{四位加法器设计：}利用设计的全加器设计四位加法器，并测出其最差情况的平均延时。
     
+    \item \textbf{寄存器设计：}设计一个简单的寄存器，并测量寄存器输入分别为 0 和 1 时的建立时间 $t\_setup$ 、保持时间 $t\_hold$ 和传播延时 $t\_pcq$ (一共要测 6 个数据)。
+    
+    \item \textbf{计数器设计：}根据设计的 4bit 加法器，设计一个不带复位功能的 4bit Counter，并根据公式 1 计算 counter 的最小时钟周期，然后实际仿真看看能不能达到计算的频率。
+
 \end{enumerate}
 
 % 实验步骤
 \section*{四、实验步骤}
 
+\subsection*{1. 全加器设计}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-17-20-36-50.png}
+  \caption{镜像加法器设计}
+  \label{fig:image-2025-12-17-20-36-50.png}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-17-20-37-30.png}
+  \caption{全加器测试电路}
+  \label{fig:image-2025-12-17-20-37-30.png}
+\end{figure}
+
+\subsection*{2. 四位加法器设计}
+
+基于CMOS电路的天然反相特性，本设计采用了一种优化的四位加法器级联方案，旨在降低关键路径延时。具体设计原理与步骤如下：
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-17-20-59-19.png}
+  \caption{四位加法器设计原理图}
+  \label{fig:image-2025-12-17-20-59-19.png}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-17-20-47-02.png}
+  \caption{四位加法器设计原理图}
+  \label{fig:image-2025-12-17-20-47-02.png}
+\end{figure}
+
+\begin{enumerate}
+    \item \textbf{逻辑反相特性应用：} 
+    全加器具有如下逻辑性质：若将其所有输入信号取反，则其所有输出信号也会相应取反。利用这一特性，可以构建极性交替的进位链，从而避免在级间插入额外的反相器。
+
+    \item \textbf{级联结构设计：}
+    \begin{itemize}
+        \item \textbf{第一级：} 输入采用正相信号，其输出的进位信号 $C_{o,0}$ 和和信号 $S_0$ 为反相逻辑。
+        \item \textbf{第二级：} 为了直接利用上一级输出的反相进位信号，本级的加数输入 $A, B$ 也被设计为反相输入。根据上述逻辑特性，该级输出的进位信号 $C_{o,1}$ 将恢复为正相。
+        \item \textbf{后续级联：} 以此类推，将前一级的输出直接作为下一级的输入，形成正负逻辑交替的传播结构。
+    \end{itemize}
+
+    \item \textbf{输出修正与延时优化：}
+    根据原理图排布，部分输出信号（具体为 $C_{o,1}, C_{o,3}, S_0, S_3$）呈现反相状态，其余输出为同相。因此，在最终输出端需对这些反相信号接入反相器以还原正确的逻辑电平。该设计方案的核心优势在于省去了 $C_{o,3}$ 运算关键路径中的两个反相器，从而显著降低了传播延时，提升了加法器的运算速度。
+\end{enumerate}
+
+\subsection*{3. 寄存器设计}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-17-21-00-39.png}
+  \caption{寄存器设计原理图}
+  \label{fig:image-2025-12-17-21-00-39.png}
+\end{figure}
+
+本实验采用参数扫描的方法测量寄存器的关键时序参数：建立时间（$t_{setup}$）、保持时间（$t_{hold}$）以及传播延时（$t_{pcq}$）。测量过程分为针对输入数据 $D=1$ 和 $D=0$ 两种情况，具体步骤如下：
+
+\begin{enumerate}
+    \item \textbf{输入为高电平（Input=1）时的测量：}
+    \begin{itemize}
+        \item \textbf{测量 $t_{setup}$：} 首先将保持时间 $t_{hold}$ 设定为一个较大的安全裕量值（例如 $100ps$），以确保保持时间满足要求。随后对建立时间 $t_{setup}$ 进行扫描，范围从 $100ps$ 逐步减小至 $0ps$，观察输出是否正确翻转，从而确定最小的建立时间。
+        \item \textbf{测量 $t_{hold}$：} 将建立时间 $t_{setup}$ 固定为上述测得的安全值（或设为 $100ps$ 的保险值），对保持时间 $t_{hold}$ 进行扫描，范围从 $50ps$ 逐步减小至 $0ps$，确定最小的保持时间。
+    \end{itemize}
+    
+    \item \textbf{输入为低电平（Input=0）时的测量：}
+    \begin{itemize}
+        \item 将输入信号置为 0，重复上述针对 $t_{setup}$ 和 $t_{hold}$ 的扫描与测量步骤，记录相应的数据。
+    \end{itemize}
+    
+    \item \textbf{传播延时 $t_{pcq}$ 的测量：} 在满足建立和保持时间约束的条件下，测量时钟沿到输出数据（Q）稳定变化的时间差。
+\end{enumerate}
+
+\subsection*{4. 计数器设计}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-17-21-16-08.png}
+  \caption{计数器设计原理图}
+  \label{fig:image-2025-12-17-21-16-08.png}
+\end{figure}
+
+由实验三知，最大 $t_{setup} = 36.84\,\mathrm{ps}$，最大 $t_{pcq} = 29.30\,\mathrm{ps}$。由上一次实验知，最大 $t_{plogic} = 162.07\,\mathrm{ps}$。
+
+根据公式 $T \geq t_{pcq} + t_{plogic} + t_{setup}$，计算得：
+\begin{equation}
+    T \geq 29.30 + 162.07 + 36.84 = 228.21\,\mathrm{ps}
+\end{equation}
+
+并用该值进行仿真验证。
 % 实验结果
 \section*{五、实验结果}
 
+\subsection*{1. 全加器设计}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-17-20-39-00.png}
+  \caption{全加器逻辑功能验证}
+  \label{fig:image-2025-12-17-20-39-00.png}
+\end{figure}
+
+由仿真结果可知，全加器的输出符合真值表：
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}ccc|cc}
+        \toprule
+        A & B & CI & S & CO \\
+        \midrule
+        0 & 0 & 0 & 0 & 0 \\
+        0 & 0 & 1 & 1 & 0 \\
+        0 & 1 & 0 & 1 & 0 \\
+        0 & 1 & 1 & 0 & 1 \\
+        1 & 0 & 0 & 1 & 0 \\
+        1 & 0 & 1 & 0 & 1 \\
+        1 & 1 & 0 & 0 & 1 \\
+        1 & 1 & 1 & 1 & 1 \\
+        \bottomrule
+    \end{tabular*}
+    \caption{全加器真值表}
+\end{table}
+
+\subsection*{2. 四位加法器设计}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-17-20-58-04.png}
+  \caption{四位全加器逻辑功能验证}
+  \label{fig:image-2025-12-17-20-58-04.png}
+\end{figure}
+
+如图所示，四位加法器的输出符合预期。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-17-20-53-10.png}
+  \caption{$t_{phl}$ 测量结果:$162.07ps$}
+  \label{fig:image-2025-12-17-20-53-10.png}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-17-20-53-47.png}
+  \caption{$t_{plh}$ 测量结果:$118.768ps$}
+  \label{fig:image-2025-12-17-20-53-47.png}
+\end{figure}
+
+综上，平均延时为：$\overline p = \frac{t_{phl}+t_{plh}}{2} = 140.419 ps$
+
+\subsection*{3. 寄存器设计}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-17-21-04-00.png}
+\caption{输入为 1 时的 $t_\mathrm{setup}$ 扫描结果：最低可为 $21.1\,\mathrm{ps}$}
+  \label{fig:image-2025-12-17-21-04-00.png}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-17-21-06-16.png}
+  \caption{输入为 1 时的 $t_\mathrm{hold}$ 扫描结果：最低可为 $0\,\mathrm{ps}$}
+  \label{fig:image-2025-12-17-21-06-16.png}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-17-21-06-51.png}
+  \caption{输入为 1 时的 $t_\mathrm{pcq}$ 测量结果：$29.2996\,\mathrm{ps}$}
+  \label{fig:image-2025-12-17-21-06-51.png}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-17-21-07-32.png}
+  \caption{输入为 0 时的 $t_\mathrm{hold}$ 扫描结果：最低可为 $0\,\mathrm{ps}$}
+  \label{fig:image-2025-12-17-21-07-32.png}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-17-21-08-30.png}
+  \caption{输入为 0 时的 $t_\mathrm{pcq}$ 测量结果：$29.0874\,\mathrm{ps}$以及$t_setup$最低可为$36.8421\,\mathrm{ps}$}
+  \label{fig:image-2025-12-17-21-08-30.png}
+\end{figure}
+
+\begin{table}[H]
+    \centering
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{cccc}
+        \toprule
+        输入值 & $t_\mathrm{setup}$ (ps) & $t_\mathrm{hold}$ (ps) & $t_\mathrm{pcq}$ (ps) \\
+        \midrule
+        1 & 21.1 & 0 & 29.30 \\
+        0 & 36.84 & 0 & 29.09 \\
+        \bottomrule
+    \end{tabular}
+    \caption{寄存器关键时序参数测量结果}
+\end{table}
+
+\subsection*{$t_\mathrm{hold}$为什么可以为0}
+
+\textbf{理论分析：}
+
+对于基于传输门的主从触发器结构，保持时间 $t_{hold}$ 定义为在时钟有效沿之后，输入数据 $D$ 必须保持稳定的最小时间长度。
+
+在本设计中，输入级传输门 $T_1$ 的控制逻辑如下：
+\begin{itemize}
+    \item \textbf{导通条件：} $CLK=0$ (即 $\overline{CLK}=1$)。
+    \item \textbf{关断条件：} $CLK=1$ (即 $\overline{CLK}=0$)。
+\end{itemize}
+
+理想情况下，当时钟 $CLK$ 上升沿到来时，$T_1$ 应立即关断以锁存数据。然而，实际电路中存在时钟反相器产生的传播延时。设时钟信号到达传输门 $T_1$ 的反相控制端（NMOS栅极）的延时为 $t_{inv}$。
+
+数据 $D$ 经过输入反相器 $I_1$ 到达传输门输入端的延时为 $t_{pd, I1}$。为了确保数据被正确锁存，输入数据 $D$ 必须在传输门完全关断之前保持稳定。
+
+保持时间约束条件可表示为：
+\begin{equation}
+    t_{hold} \geq t_{overlap} + t_{margin} - t_{pd, I1}
+\end{equation}
+其中 $t_{overlap}$ 是时钟信号传播造成的关断滞后时间（主要由时钟反相器延时 $t_{inv}$ 决定）。
+
+在本电路设计中，由于数据路径经过了一个反相器 $I_1$，引入了显著的路径延时 $t_{pd, I1}$。若满足：
+\begin{equation}
+    t_{pd, I1} \geq t_{inv}
+\end{equation}
+即数据路径的延时大于等于时钟路径的延时，则外部输入数据 $D$ 即使在时钟上升沿时刻立即改变（即 $t_{hold}=0$），内部节点的数据由于 $I_1$ 的延时作用，依然能在传输门关断前保持稳定。
+
+因此，由于输入反相器 $I_1$ 的传播延时补偿了时钟反相器的延时，使得外部观测到的保持时间 $t_{hold}$ 可以为 0 甚至为负值（在工程上通常标定为 0）。
+
+\subsection*{思考题}
+
+\begin{enumerate}
+    \item \textbf{信号再生与噪声容限提升：}
+    
+    输入信号 $D$ 经过反相器 $I_1$ 和 $I_4$ 的缓冲作用，能够显著提高信号的再生性。
+    
+    在数字集成电路中，信号在传输过程中往往会受到噪声干扰或发生衰减。反相器具有高增益的电压传输特性（VTC），其阈值电压附近的陡峭斜率使得输出信号能够迅速恢复到标准的逻辑电平（$V_{DD}$ 或 $GND$）。
+    
+    具体而言，当输入端存在噪声干扰使得电压偏离理想逻辑电平但未越过逻辑阈值 $V_M$ 时，反相器 $I_1$ 和 $I_4$ 能够滤除这些噪声，输出波形规整、边沿陡峭的信号。这种特性有效地提高了电路的噪声容限，增强了系统的鲁棒性。
+
+    \item \textbf{时序参数优化（关于 $t_{hold}$）：}
+    
+    正如前文关于保持时间 $t_{hold}$ 的分析所述，输入反相器 $I_1$ 的存在对时序约束起到了关键的优化作用。
+    
+    保持时间 $t_{hold}$ 的物理约束本质上要求数据在时钟沿到来后，必须维持稳定的时间长度，以确保采样窗口内数据不发生跳变。对于主从触发器结构，其保持时间约束可近似表示为：
+    \begin{equation}
+        t_{hold} \approx t_{overlap} - t_{pd, data}
+    \end{equation}
+    其中，$t_{overlap}$ 为时钟信号到达传输门控制端的延时（主要由时钟反相器引起），$t_{pd, data}$ 为数据从外部输入引脚到达采样传输门输入端的传播延时。
+    
+    在本设计中，反相器 $I_1$ 引入了正的数据路径延时 $t_{pd, I1}$。当 $t_{pd, I1} \geq t_{overlap}$ 时，外部数据的变化传导至内部采样点会有滞后，这实际上抵消了时钟延时的影响，使得外部观测到的保持时间 $t_{hold}$ 可以减小至 0 甚至负值。
+    
+    若移除 $I_1$，数据路径延时 $t_{pd, data}$ 将显著减小（接近于 0），此时 $t_{hold} \approx t_{overlap} > 0$，即必须要求外部输入数据在时钟沿之后保持一段时间不变，这增加了上一级电路的时序设计难度。
+\end{enumerate}
+
+
+\subsection*{4. 计数器设计}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-17-21-24-59.png}
+  \caption{500ps周期计数器逻辑功能验证}
+  \label{fig:image-2025-12-17-21-24-59.png}
+\end{figure}
+
+经过参数扫描，最终验证了最小时钟周期为240ps。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-17-21-27-02.png}
+  \caption{最小时钟周期：240ps}
+  \label{fig:image-2025-12-17-21-27-02.png}
+\end{figure}
 % 总结
 \section*{六、总结}
+
+本次实验通过全定制设计流程，深入理解了组合逻辑与时序逻辑电路的设计与优化方法。在组合逻辑部分，通过镜像加法器构建了四位加法器，利用逻辑反相特性优化了关键路径延时，实测平均延时约为 $140.4\,\mathrm{ps}$。在时序逻辑部分，设计了基于传输门的寄存器，通过参数扫描精确测量了 $t_{setup}$、$t_{hold}$ 及 $t_{pcq}$，并验证了输入反相器对 $t_{hold}$ 的优化作用。最后，基于上述模块构建了 4-bit 计数器，理论计算与仿真验证了其最高工作频率（周期约 $240\,\mathrm{ps}$）。实验结果表明，合理的电路拓扑结构与时序约束分析对于提升 VLSI 系统性能至关重要。
 
 % 附录
 \section*{附录}
