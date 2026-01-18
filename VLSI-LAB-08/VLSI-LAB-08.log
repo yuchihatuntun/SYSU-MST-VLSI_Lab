@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.12.8)  18 JAN 2026 01:25
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.12.8)  18 JAN 2026 17:48
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1110,15 +1110,23 @@ LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <9> not available
 [2]
 
 [3]
+File: images/image-2026-01-18-15-25-33.png Graphic file (type bmp)
+<images/image-2026-01-18-15-25-33.png>
+
 
 [4]
 
 [5]
+File: images/image-2026-01-18-15-26-45.png Graphic file (type bmp)
+<images/image-2026-01-18-15-26-45.png>
+
+
+[6]
 File: images/origin.png Graphic file (type bmp)
 <images/origin.png>
 
 
-[6]
+[7]
 File: images/1-1.jpg Graphic file (type bmp)
 <images/1-1.jpg>
 File: images/1-2.jpg Graphic file (type bmp)
@@ -1130,23 +1138,21 @@ File: lstlang1.sty 2024/09/23 1.10c listings language file
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2024/09/23 1.10c listings language file
 )
-
-[7]
 File: images/2-1.jpg Graphic file (type bmp)
 <images/2-1.jpg>
 File: images/2-2.jpg Graphic file (type bmp)
 <images/2-2.jpg>
 File: images/2-3.jpg Graphic file (type bmp)
 <images/2-3.jpg>
+
+
+[8]
 File: images/3-1.jpg Graphic file (type bmp)
 <images/3-1.jpg>
 File: images/3-2.jpg Graphic file (type bmp)
 <images/3-2.jpg>
 File: images/3-3.jpg Graphic file (type bmp)
 <images/3-3.jpg>
-
-
-[8]
 File: images/4-1.jpg Graphic file (type bmp)
 <images/4-1.jpg>
 File: images/4-2.jpg Graphic file (type bmp)
@@ -1162,11 +1168,12 @@ File: images/5-2.jpg Graphic file (type bmp)
 <images/5-2.jpg>
 File: images/5-3.jpg Graphic file (type bmp)
 <images/5-3.jpg>
-LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <14.4> not available
-(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 812.
 
 
 [10]
+LaTeX Font Info:    Font shape `TU/lmtt/bx/n' in size <14.4> not available
+(Font)              Font shape `TU/lmtt/b/n' tried instead on input line 849.
+
 
 [11]
 
@@ -1192,13 +1199,13 @@ L3 programming layer <2022/08/05>
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `VLSI-LAB-08.out' has not changed.
-(rerunfilecheck)             Checksum: 96D9C1F26BA42580351EB2B7AB427BC9;2458.
+(rerunfilecheck)             Checksum: 5A8EF655B61815536F388FED453A12E9;2548.
  ) 
 Here is how much of TeX's memory you used:
- 49806 strings out of 473832
- 1216746 string characters out of 5729481
- 2234781 words of memory out of 5000000
- 72222 multiletter control sequences out of 15000+600000
+ 49835 strings out of 473832
+ 1218182 string characters out of 5729481
+ 2219625 words of memory out of 5000000
+ 72249 multiletter control sequences out of 15000+600000
  564082 words of font info for 101 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  103i,13n,114p,493b,1891s stack positions out of 10000i,1000n,20000p,200000b,200000s
