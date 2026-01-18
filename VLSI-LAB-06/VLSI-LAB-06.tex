@@ -1,0 +1,197 @@
+\documentclass[a4paper, 12pt]{article}
+\usepackage[UTF8]{ctex} 
+\usepackage{geometry} 
+\usepackage{enumitem} 
+\usepackage{titlesec} 
+\usepackage{xcolor} 
+\usepackage{ulem} 
+\usepackage{graphicx} 
+\usepackage{float} 
+\usepackage{amsmath} 
+\usepackage{subcaption}
+\usepackage{circuitikz}
+\usepackage{hyperref} 
+\usepackage{fancyhdr}
+
+\geometry{left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+
+% 设置行距
+\linespread{1.5}
+
+% 设置段落间距
+\setlength{\parskip}{0.5em}
+
+\titleformat{\section}{\Large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\large\bfseries}{\thesubsection}{1em}{}
+
+\setlist[enumerate,1]{label=\arabic*、, leftmargin=*}
+\setlist[enumerate,2]{label=\arabic*., leftmargin=*}
+
+% XeLaTeX下使用系统字体
+\setCJKmainfont{SimSun}[AutoFakeBold=2.5] % 宋体
+\setCJKsansfont{SimHei} % 黑体
+\setCJKmonofont{FangSong} % 仿宋
+\setCJKfamilyfont{kai}{KaiTi} % 楷体
+\newcommand{\kai}{\CJKfamily{kai}}
+
+% 配置hyperref
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue,
+    citecolor=blue
+}
+
+\begin{document}
+
+% 标题
+\begin{center}
+    {\kai\LARGE\textbf{实验六\ \ booth编码乘法器}}
+\end{center}
+
+% 页眉页脚
+\pagestyle{fancy}
+\fancyhf{} 
+\fancyhead[L]{\kai 实验六\ \ booth编码乘法器} % 左侧页眉
+\fancyhead[R]{\href{https://github.com/yuchihatuntun/SYSU-MST-VLSI_Lab}{GitHub} | 23342107\ 徐睿琳は}                   % 右侧页眉
+\fancyfoot[C]{\thepage}                       % 页脚居中页码
+\renewcommand{\headrulewidth}{0.4pt}          % 页眉线宽度
+\renewcommand{\footrulewidth}{0pt}            % 页脚线宽度
+
+\begin{center}
+    23342107\ 徐睿琳
+\end{center}
+
+\vspace{0.5cm}
+
+% 实验要求
+\section*{一、实验要求}
+
+    设计booth编码乘法器，了解并掌握booth编码的基本原理。
+
+% 实验目的
+\section*{二、实验目的}
+\begin{enumerate}
+    \item 了解并掌握booth编码的基本原理。
+    \item 学会设计booth编码的乘法器。
+\end{enumerate}
+
+% 实验内容
+\section*{三、实验内容}
+\begin{enumerate}
+    \item 设计一个Radix-4 booth编码的4bit有符号乘法器，设计booth编码模块和利用编码信号得到部分积，最终通过加法器相加得到乘积，验证其功能正确。重点在于了解booth编码的基本原理和作用及其电路实现。
+\end{enumerate}
+
+% 实验步骤
+\section*{四、实验步骤}
+
+\subsection*{1. Booth编码乘法原理}
+
+    Booth算法通过对乘数进行重新编码，减少部分积的数量，从而提高乘法运算的速度。对于Radix-4 Booth编码（基4 Booth算法），它将乘数每3位一组进行编码，每次处理2位，部分积数量减少一半。
+
+    设乘数 $B$ 为 $N$ 位二进制补码数 $B = b_{N-1}b_{N-2}\dots b_1b_0$，并在最低位补 $b_{-1}=0$。Radix-4 Booth编码规则如下：
+
+    \begin{equation}
+        PP_i = \text{Operation} \times A \times 2^{2i}
+    \end{equation}
+    其中 $A$ 为被乘数，$PP_i$ 为第 $i$ 个部分积。编码依据 $b_{2i+1}, b_{2i}, b_{2i-1}$ 三位信号决定操作类型。
+
+    \begin{table}[H]
+        \centering
+        \caption{Radix-4 Booth 编码表}
+        \begin{tabular}{|c|c|c|c|c|}
+            \hline
+            $b_{2i+1}$ & $b_{2i}$ & $b_{2i-1}$ & 操作 (Operation) & 部分积生成 \\
+            \hline
+            0 & 0 & 0 & 0 & 0 \\
+            0 & 0 & 1 & $+1$ & $+A$ \\
+            0 & 1 & 0 & $+1$ & $+A$ \\
+            0 & 1 & 1 & $+2$ & $+2A$ (左移1位) \\
+            1 & 0 & 0 & $-2$ & $-2A$ (取反加1，左移1位) \\
+            1 & 0 & 1 & $-1$ & $-A$ (取反加1) \\
+            1 & 1 & 0 & $-1$ & $-A$ (取反加1) \\
+            1 & 1 & 1 & 0 & 0 \\
+            \hline
+        \end{tabular}
+    \end{table}
+
+    对于4-bit有符号乘法器，乘数 $B$ 扩展为 $b_3b_2b_1b_0b_{-1}$，分为两组：
+    \begin{itemize}
+        \item 组0 ($i=0$): $b_1, b_0, b_{-1}$ $\rightarrow$ 生成 $PP_0$
+        \item 组1 ($i=1$): $b_3, b_2, b_1$ $\rightarrow$ 生成 $PP_1$
+    \end{itemize}
+    最终乘积 $P = PP_0 + (PP_1 \ll 2)$。
+
+\subsection*{2. Booth编码模块设计}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-24-22-17-46.png}
+  \caption{Booth编码模块逻辑电路图}
+  \label{fig:image-2025-12-24-22-17-46.png}
+\end{figure}
+
+    设计Booth编码模块，根据乘数的3位输入生成对应的部分积控制信号。使用组合逻辑电路实现。
+
+\subsection*{3. Booth选择模块设计}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-24-22-18-11.png}
+  \caption{Booth选择模块逻辑电路图}
+  \label{fig:image-2025-12-24-22-18-11.png}
+\end{figure}
+
+    设计Booth选择模块，根据Booth编码信号选择相应的部分积。使用多路选择器实现。
+
+\subsection*{4. 部分积加法电路设计}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-24-22-18-28.png}
+  \caption{顶层乘法模块}
+  \label{fig:image-2025-12-24-22-18-28.png}
+\end{figure}
+
+    设计部分积加法电路，将生成的部分积进行加法运算，得到最终乘积。使用全加器阵列实现。
+
+% 实验结果
+\section*{五、实验结果}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{images/image-2025-12-24-22-18-51.png}
+  \caption{Booth编码乘法器仿真波形图}
+  \label{fig:image-2025-12-24-22-18-51.png}
+\end{figure}
+
+如图所示，仿真结果验证了设计的Radix-4 Booth编码乘法器的正确性。输入被乘数和乘数后，输出乘积符合预期结果。
+
+% 总结
+\section*{六、总结}
+
+通过本次实验，我深入理解了Radix-4 Booth编码乘法器的工作原理及其在数字集成电路设计中的重要性。
+
+    首先，在理论层面，我掌握了Booth算法的核心思想：通过对乘数进行重新编码（Recoding），将连续的“1”序列转换为“+1”和“-1”的操作，从而减少部分积（Partial Products）的数量。对于Radix-4 Booth算法，每两位乘数生成一个部分积，使得部分积的数量减少了一半（对于N位乘法器，部分积从N个减少到N/2个）。这显著降低了后续加法树（如Wallace树或压缩器阵列）的复杂度，从而提高了乘法器的运算速度并减少了面积和功耗。
+
+    其次，在电路设计层面，我学会了如何将算法转化为具体的硬件模块：
+    \begin{itemize}
+        \item \textbf{编码模块（Booth Encoder）：} 实现了根据相邻三位乘数生成控制信号（如单倍、双倍、取反等）的逻辑。
+        \item \textbf{部分积生成模块（Partial Product Generator）：} 利用编码信号和被乘数生成实际的部分积，特别是处理负数时的“取反加一”操作（补码表示）以及移位操作。
+        \item \textbf{加法阵列：} 理解了符号位扩展（Sign Extension）在部分积相加时的重要性，确保了有符号数运算的正确性。
+    \end{itemize}
+
+    最后，通过仿真验证，我确认了设计的4-bit Booth乘法器能够正确处理正数、负数以及零的乘法运算。本次实验不仅锻炼了我的逻辑电路设计能力，也让我体会到了算法优化对硬件性能提升的关键作用，为后续设计更高位宽、更高性能的运算单元打下了坚实基础。
+
+% 附录
+\section*{附录}
+\appendix
+\renewcommand{\thesection}{附录\Alph{section}}
+
+\section{相关代码}
+
+\section{数据表格}
+
+\section{其他材料}
+
+\end{document}
